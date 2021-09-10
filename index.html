@@ -1,5 +1,23 @@
 <html>
+<head>
+    <script>
+        let now = new Date();
+        let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        let monthNum = today.getMonth() + 1;
+        fetch(`https://www.hebcal.com/hebcal?v=1&year=now&month=${monthNum}&cfg=json&maj=on&min=off&mod=off&nx=off&ss=off&mf=off`)
+            .then(response => response.json())
+            .then(data => {                
+                let holidaysToday = data?.items?.filter(item => new Date(item.date + 'T00:00:00Z').getTime() == today.getTime());
+                let yesno = document.getElementById('yes-no');
+                if (!!data && !!data.items && holidaysToday.length > 0) {
+                    yesno.innerHTML = "YES";
+                } else {
+                    yesno.innerHTML = "NO";
+                }
+            });
+    </script>
+</head>
 <body>
-hello
+<div id='yes-no'></div>
 </body>
 </html>
