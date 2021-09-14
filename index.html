@@ -2,7 +2,7 @@
 <head>
     <script>
         let now = new Date();
-        let today = new Date('2021-09-15T00:00:00Z');//new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
         let monthNum = today.getMonth() + 1;
         fetch(`https://www.hebcal.com/hebcal?v=1&year=now&month=${monthNum}&cfg=json&maj=on&min=off&mod=off&nx=off&ss=off&mf=off`)
             .then(response => response.json())
@@ -10,7 +10,6 @@
                 let holidaysToday = data?.items?.filter(item => new Date(item.date + 'T00:00:00Z').getTime() == today.getTime());
                 let yesnoElement = document.getElementById('yes-no');
                 if (!!data && !!data.items && holidaysToday.length > 0) {
-                    console.log(holidaysToday[0]);
                     yesnoElement.innerHTML = "YES";
                     let firstHoliday = holidaysToday[0];
                     let holidayElement = document.getElementById('holiday');
@@ -25,6 +24,10 @@
             });
     </script>
     <style>
+        @font-face {
+            font-family: hebrew-look;
+            src: url(sefer.ttf);
+        }
         .center-outer {
             position: relative;
             height: 100%;
@@ -35,6 +38,16 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+        #yes-no {
+            font-family: hebrew-look, Arial;
+            font-size: 100px;
+            text-align: center;
+            margin: 30px;
+        }
+        #holiday {
+            font-family: Arial;
+            text-align: center;
         }
     </style>
 </head>
