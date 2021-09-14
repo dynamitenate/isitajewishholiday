@@ -2,22 +2,48 @@
 <head>
     <script>
         let now = new Date();
-        let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        let today = new Date('2021-09-15T00:00:00Z');//new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
         let monthNum = today.getMonth() + 1;
         fetch(`https://www.hebcal.com/hebcal?v=1&year=now&month=${monthNum}&cfg=json&maj=on&min=off&mod=off&nx=off&ss=off&mf=off`)
             .then(response => response.json())
             .then(data => {                
                 let holidaysToday = data?.items?.filter(item => new Date(item.date + 'T00:00:00Z').getTime() == today.getTime());
-                let yesno = document.getElementById('yes-no');
+                let yesnoElement = document.getElementById('yes-no');
                 if (!!data && !!data.items && holidaysToday.length > 0) {
-                    yesno.innerHTML = "YES";
+                    console.log(holidaysToday[0]);
+                    yesnoElement.innerHTML = "YES";
+                    let firstHoliday = holidaysToday[0];
+                    let holidayElement = document.getElementById('holiday');
+                    if (!!firstHoliday.title && !!firstHoliday.link) {
+                        holidayElement.innerHTML = `It's <a href=${firstHoliday.link}>${firstHoliday.title}</a>`;
+                    } else if (!!firstHoliday.title) {
+                        holidayElement.innerHTML = `It's ${firstHoliday.title}`;
+                    }
                 } else {
-                    yesno.innerHTML = "NO";
+                    yesnoElement.innerHTML = "NO";
                 }
             });
     </script>
+    <style>
+        .center-outer {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        .center-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
 </head>
 <body>
-<div id='yes-no'></div>
+    <div class='center-outer'>
+        <div class='center-inner'>
+            <p id='yes-no'></p>
+            <p id='holiday'></p>
+        </div>
+    </div>
 </body>
 </html>
