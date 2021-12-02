@@ -17,10 +17,13 @@ async function updateYesNo() {
 
 async function getHolidaysToday() {
     let now = new Date();
-    let today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    let monthNum = today.getUTCMonth() + 1;
+    let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let monthNum = today.getMonth() + 1;
     let data = await hebcalRequest(monthNum);
-    let holidaysToday = data?.items?.filter(item => new Date(item.date + 'T00:00:00Z').getTime() == today.getTime());
+    let holidaysToday = data?.items?.filter(item => {
+        let itemDate = new Date(Date.parse(item.date) + today.getTimezoneOffset()*60*1000);
+        return itemDate.getTime() == today.getTime()
+    });
     return holidaysToday;
 }
 
